@@ -1,6 +1,6 @@
 <?php
 // ユーザーデータファイルのパス
-$userDataFile = 'users.txt';
+$userDataFile = 'users/users.txt';
 
 // ログインフォームから送信されたデータ
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {

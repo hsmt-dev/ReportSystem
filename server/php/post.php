@@ -30,7 +30,17 @@
     </style>
 </head>
 <body>
-    <p><a href="index.php">レポート一覧</a></p>
+
+    <?php
+    session_start();
+    if (!isset($_SESSION['user_id'])) {
+        // ログインページにリダイレクト
+        header('Location: login.php');
+        exit;
+    }
+    ?>
+
+    <p><a href="index.php" style="float:left;">レポート一覧</a>　<a href="logout.php" style="float:right;">ログアウト</a></p>
     <hr>
 
     <?php
