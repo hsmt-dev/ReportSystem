@@ -21,14 +21,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <!DOCTYPE html>
 <html>
 <head>
-    <title>パスワードのハッシュ生成</title>
+    <title>パスワードハッシュ生成</title>
 </head>
 <body>
     <h2>パスワード</h2>
     <form method="POST" action="">
         <label for="plain_password">平文のパスワード:</label>
         <input type="plain_password" id="plain_password" name="plain_password" required><br>
-        <input type="submit" value="ログイン">
+        <input type="submit" value="生成">
     </form>
 </body>
 </html>

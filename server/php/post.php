@@ -1,3 +1,17 @@
+<?php
+//ini_set("display_errors", 'On');
+//error_reporting(E_ALL);
+
+require_once 'utils/LoginUtil.php';
+
+if( !LoginUtil::IsSession() ) 
+{
+    // ログインページにリダイレクト
+    header('Location: login.php');
+    exit;
+}
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -30,15 +44,6 @@
     </style>
 </head>
 <body>
-
-    <?php
-    session_start();
-    if (!isset($_SESSION['user_id'])) {
-        // ログインページにリダイレクト
-        header('Location: login.php');
-        exit;
-    }
-    ?>
 
     <p><a href="index.php" style="float:left;">レポート一覧</a>　<a href="logout.php" style="float:right;">ログアウト</a></p>
     <hr>

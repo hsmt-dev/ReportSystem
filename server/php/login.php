@@ -1,30 +1,27 @@
 <?php
-// ユーザーデータファイルのパス
-$userDataFile = 'users/users.txt';
+//ini_set("display_errors", 'On');
+//error_reporting(E_ALL);
 
-// ログインフォームから送信されたデータ
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+require_once 'utils/LoginUtil.php';
+
+// ユーザーデータファイルのパス
+const USERS_DATA_FILE = 'users/users.txt';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') 
+{
     $user_id = $_POST['user_id'];
     $password = $_POST['password'];
 
-    // ユーザーデータファイルを読み込む
-    $userData = file($userDataFile, FILE_IGNORE_NEW_LINES);
-
-    // ユーザーの存在とパスワードの検証
-    foreach ($userData as $line) {
-        list($storedUserId, $storedHashedPassword) = explode(',', $line);
-        if ($user_id === $storedUserId && password_verify($password, $storedHashedPassword)) {
-            // ログイン成功
-            session_start();
-            $_SESSION['user_id'] = $user_id;
-            header('Location: index.php'); // ダッシュボードなど、ログイン後のページにリダイレクト
-            exit;
-        }
+    if( LoginUtil::Login( USERS_DATA_FILE, $user_id, $password ) )
+    {
+        header('Location: index.php'); // ダッシュボードなど、ログイン後のページにリダイレクト
+        exit;
     }
 
     // ログイン失敗
     $error_message = "IDまたはパスワードが正しくありません。";
 }
+
 ?>
 
 <!DOCTYPE html>
