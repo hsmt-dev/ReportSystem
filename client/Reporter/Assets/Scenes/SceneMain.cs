@@ -6,6 +6,7 @@ public class SceneMain : MonoBehaviour
 {
     string _title = "";
     string _url = "";
+    string _json = "";
 
     void Start()
     {
@@ -17,8 +18,12 @@ public class SceneMain : MonoBehaviour
         _title = GUILayout.TextField(_title, 64, GUILayout.Width(400));
         if (GUILayout.Button("Send"))
         {
+            // 表示したい内容のjsonを生成する
+            ReportData reportData = new ReportData();
+            _json = JsonUtility.ToJson( reportData );
+
             _url="";
-            StartCoroutine( Reporter.Instance.Send( "http://192.168.49.184:8080/report/upload.php", _title, (id) => {
+            StartCoroutine( Reporter.Instance.Send( "http://192.168.49.184:8080/report/upload.php", _title, _json, (id) => {
                 _url = "http://192.168.49.184:8080/report/post.php?id="+id;
             } ) );
 /*

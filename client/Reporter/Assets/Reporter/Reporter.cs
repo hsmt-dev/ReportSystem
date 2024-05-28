@@ -3,8 +3,7 @@ using UnityEngine.Networking;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading;
-using System.Globalization;
+
 using System.IO;
 
 public class Reporter
@@ -20,13 +19,12 @@ public class Reporter
     private byte[] _screenShotData = null;
 
 
-    public IEnumerator Send( string url, string title, Action<string> success=null )
+    public IEnumerator Send( string url, string title, string json, Action<string> success=null )
     {
         _contents = new Dictionary<string, string>();
 
         AddContent("title", title);
-
-        AddSystemInfo();
+        AddContent("json_data", json);
 
         yield return CaptureScreenShot();
 
@@ -35,11 +33,22 @@ public class Reporter
 
         yield return webRequest.SendWebRequest();
 
-        if (webRequest.isNetworkError || webRequest.isHttpError) {
-            Debug.LogErrorFormat("[{0}]{1}", webRequest.responseCode, webRequest.error);
-        } else {
-            success?.Invoke( _contents["date_time"] );
-            Debug.Log("Form upload complete!");
+        switch( webRequest.result )
+        {
+            case UnityWebRequest.Result.InProgress:
+                Debug.Log( "Requesting wait..." );
+                break;
+            case UnityWebRequest.Result.Success:
+                var key = webRequest.downloadHandler.text;
+                success?.Invoke( key );
+                Debug.Log("Form upload complete! : "+key);
+                break;
+            case UnityWebRequest.Result.ConnectionError:
+            case UnityWebRequest.Result.ProtocolError:
+            case UnityWebRequest.Result.DataProcessingError:
+            default:
+                Debug.LogErrorFormat("[{0}]{1}", webRequest.responseCode, webRequest.error);
+                break;
         }
 
         _contents.Clear();
@@ -67,19 +76,6 @@ public class Reporter
         return form;
     }
 
-    private void AddSystemInfo()
-    {
-        const uint mega = 1024 * 1024;
-
-        AddContent("date_time", GetCurrentUnixTime().ToString());
-        AddContent("operating_system", SystemInfo.operatingSystem);
-        AddContent("device_model", SystemInfo.deviceModel);
-        AddContent("system_memory_size", (SystemInfo.systemMemorySize * mega).ToString());
-        AddContent("use_memory_size", GC.GetTotalMemory(false).ToString());
-//        AddContent("Log", logData);
-//        AddContent("ScreenShotBase64", screenShotData);
-    }
-
     /// <summary> 送信情報に追加 </summary>
     private void AddContent(string key, string value)
     {
@@ -90,11 +86,5 @@ public class Reporter
         }
 //        value = aesCryptoKey != null ? value.Encrypt(aesCryptoKey) : value;
         _contents.Add(key, value);
-    }
-
-    private int GetCurrentUnixTime()
-    {
-        var unixTimestamp = (int)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
-        return unixTimestamp;
     }
 }

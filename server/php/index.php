@@ -40,14 +40,14 @@ if( !LoginUtil::IsSession() )
     <p><a href="index.php" style="float:left;">レポート一覧</a>　<a href="logout.php" style="float:right;">ログアウト</a></p>
     <hr>
 
-    <!-- 画像とタイトルのアップロードフォーム -->
+    <!-- 画像とタイトルのアップロードフォーム
     <form method="post" action="upload.php" enctype="multipart/form-data">
         <input type="text" name="title" required placeholder="タイトル">
         <input type="file" name="image" required>
         <input type="submit" value="Upload">
     </form>
     <hr>
-
+    -->
 
     <!-- ページのリンクを表示 -->
     <div>

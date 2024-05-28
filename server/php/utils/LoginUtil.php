@@ -11,7 +11,8 @@ class LoginUtil
         if (file_exists($user_data_path)) 
         {
             $userData = file($user_data_path, FILE_IGNORE_NEW_LINES);
-            foreach ($userData as $line) {
+            foreach ($userData as $line)
+            {
                 list($storedUserId, $storedHashedPassword) = explode(',', $line);
                 if ($user_id === $storedUserId) 
                 {

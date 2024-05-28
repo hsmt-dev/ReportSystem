@@ -60,23 +60,7 @@ if( !LoginUtil::IsSession() )
             $title = htmlspecialchars($data['title']);
             $postDate = htmlspecialchars($data['post_date']);
             $imagePath = htmlspecialchars($data['image']);
-
-            $date_time = date('Y-m-d H:i:s', htmlspecialchars($data['date_time']));
-            $operating_system = htmlspecialchars($data['operating_system']);
-            $device_model = htmlspecialchars($data['device_model']);
-            $system_memory_size = htmlspecialchars($data['system_memory_size']);
-            $use_memory_size = htmlspecialchars($data['use_memory_size']);
-
-/*
-            echo '<h2>' . $title . '</h2>';
-            echo '<img class="thumbnail" src="' . $imagePath . '" alt="' . $title . '">';
-            echo '<p>投稿日時：' . $postDate . '</p>';
-            echo '<p>端末日時：' . $date_time . '</p>';
-            echo '<p>端末情報：' . $device_model . '</p>';
-            echo '<p>OperatingSystem：' . $operating_system . '</p>';
-            echo '<p>SystemMemorySize：' . $system_memory_size . '</p>';
-            echo '<p>UseMemorySize：' . $use_memory_size . '</p>';
-*/
+            $json_data = $data['json_data'];
 
             echo '<div class="well" style="width: 90vw;">';
             echo '<h2><strong>' . $title . '</strong></h2>';
@@ -91,22 +75,13 @@ if( !LoginUtil::IsSession() )
             echo '<tr><th colspan="2">投稿時間</th>';
             echo '<td colspan="7">' . $postDate . '</td></tr>';
 
-            echo '<tr><th colspan="2">端末日時</th>';
-            echo '<td colspan="7">' . $date_time . '</td></tr>';
-
-            echo '<tr><th colspan="2">端末情報</th>';
-            echo '<td colspan="7">' . $device_model . '</td></tr>';
-
-            echo '<tr><th colspan="2">OperatingSystem</th>';
-            echo '<td colspan="7">' . $operating_system . '</td></tr>';
-
-            echo '<tr><th colspan="2">SystemMemorySize</th>';
-            echo '<td colspan="7">' . $system_memory_size . '</td></tr>';
-
-            echo '<tr><th colspan="2">UseMemorySize</th>';
-            echo '<td colspan="7">' . $use_memory_size . '</td></tr>';
-
-
+            // JSONデータをオブジェクトにデコードする
+            $array_data = json_decode($json_data, true);
+            // デコードしたデータを列挙する
+            foreach ($array_data as $key => $value) {
+                echo '<tr><th colspan="2">' . $key . '</th>';
+                echo '<td colspan="7">' . $value . '</td></tr>';
+            }
 
             echo '</table>';
             echo '</div>';
